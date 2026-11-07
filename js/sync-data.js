@@ -1,6 +1,6 @@
 var SY={on:true,fail:0,db:null,uid:null,ready:false,dev:'d'+Math.random().toString(36).slice(2,9),busy:false,timer:null,unsub:null,status:'',err:'',hash:{},prev:{},dirty:false,pend:null,imp:null},DL=null;
 function syLoadCfg(){try{SY.on=localStorage.getItem('sbs-sync')!=='0'}catch(e){}}
-function rawSave(){try{localStorage.setItem(K,JSON.stringify(S))}catch(e){}}
+function rawSave(){try{localStorage.setItem(K,JSON.stringify(S))}catch(e){saveFail()}}
 function say(m){flash=m;renderToast();setTimeout(function(){flash='';renderToast()},3500)}
 function hsh(str){var h=5381;for(var i=0;i<str.length;i++)h=((h<<5)+h+str.charCodeAt(i))|0;return h+':'+str.length}
 function syChunks(v){var j=JSON.stringify(v);if(j.length<=60000)return[j];var out=[],cur,sz;

@@ -4,7 +4,8 @@ render();
 try{if(window.claude&&claude.use)claude.use('assets').then(function(a){AT=true;if(a)ASSETS=a;render()}).catch(function(){AT=true;render()});else AT=true}catch(e){AT=true}
 try{if(window.claude&&claude.use){claude.use('downloads').then(function(a){DL=a;syUi()}).catch(function(){});Promise.all([claude.use('db'),claude.use('user')]).then(function(r){if(!r[0]||!r[1])return;return r[1].id().then(function(id){if(!id)return;SY.db=r[0];SY.uid=id;if(SY.on)syStart();syUi()})}).catch(function(){})}}catch(e){}
 try{if(window.claude&&claude.use)claude.use('sample').then(function(a){SMP=a;upRes()}).catch(function(){})}catch(e){}
-setInterval(function(){tickRest();var m=S.med;
+var lastDay=todayS();
+setInterval(function(){tickRest();var td=todayS();if(td!==lastDay){if(cur===lastDay){cur=td;cm=td.slice(0,7)}lastDay=td;render()}var m=S.med;
   if(m&&m.run&&Date.now()>=m.end)return medFinish();
   if(ovOpen==='med'&&m&&m.run)renderOv();
   var g=S.sd.g;if(ovOpen==='sudoku'&&g&&!sdMenu&&!ovMsg&&!sdPz){g.t++;var el=document.getElementById('sdt');if(el)el.textContent=fmtT(g.t);if(g.t%10===0)rawSave()}},1000);

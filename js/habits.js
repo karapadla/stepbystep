@@ -4,7 +4,7 @@ function wdOf(d){return (new Date(d+'T12:00').getDay()+6)%7+1}
 function due(h,d){return h.fr==='w'?(h.wd||[]).indexOf(wdOf(d))>=0:true}
 function skipped(h,d){return !!(h.sk&&h.sk[d])}
 function act(){return S.habits.filter(function(h){return !h.ar})}
-function dayHabits(d){return act().filter(function(h){return hd(h,d)||(h.fr!=='n'&&due(h,d)&&!skipped(h,d))})}
+function dayHabits(d){return act().filter(function(h){return hd(h,d)||(h.fr!=='n'&&due(h,d)&&!skipped(h,d)&&(!h.c||h.c<=d))})}
 function dayPct(d){var L=dayHabits(d);return L.length?L.filter(function(h){return hd(h,d)}).length/L.length:0}
 function avg(a){return a.reduce(function(x,y){return x+y},0)/a.length}
 function streakAt(h,d0){

@@ -68,7 +68,7 @@ function inWeek(d,w){return d>=w&&d<=shiftDate(w,6)}
 function repsOf(w){return(w.sets||(w.reps?1:0))*(w.reps||0)}
 function curChallenge(){
   var t=todayS(),w=wkStart(t),wd=[0,1,2,3,4,5,6].map(function(i){return shiftDate(w,i)}),pool=[],A=act();
-  var days=function(f){return wd.filter(f).length},hasK=function(k){return A.some(function(h){return h.kind===k})},hab=A.length>0,rd=S.books.length||hasK('read'),sp=sportOn();
+  var days=function(f){return wd.filter(f).length},hasK=function(k){return A.some(function(h){return h.kind===k})},hab=A.length>0,rd=readOn()&&(S.books.length>0||hasK('read')),sp=sportOn();
   var P=function(id,text,tgt,unit,prog,on){if(on)pool.push({id:id,text:text,tgt:tgt,unit:unit,prog:prog})};
   P('hab80','Виконувати 80% звичок щодня',5,'дн.',days(function(d){return d<=t&&dayHabits(d).length&&dayPct(d)>=.8}),hab);
   P('perf3','Три ідеальні дні, усі звички',3,'дн.',days(function(d){return d<=t&&dayHabits(d).length&&dayPct(d)>=1}),hab);
@@ -76,17 +76,17 @@ function curChallenge(){
   P('read100','Прочитати 100 сторінок',100,'стор.',wd.reduce(function(a,d){return a+pagesOn(d)},0),rd);
   P('read300','Прочитати 300 сторінок',300,'стор.',wd.reduce(function(a,d){return a+pagesOn(d)},0),rd);
   P('readdays','Читати 5 днів',5,'дн.',days(function(d){return pagesOn(d)>0}),rd);
-  P('finish','Закінчити книгу',1,'кн.',S.books.filter(function(b){return b.st==='done'&&inWeek(b.fin||'',w)}).length,S.books.some(function(b){return b.st==='now'}));
-  P('quote2','Зберегти 2 цитати',2,'цит.',allQuotes().filter(function(x){return inWeek(x.c.date||'',w)}).length,S.books.length>0);
+  P('finish','Закінчити книгу',1,'кн.',S.books.filter(function(b){return b.st==='done'&&inWeek(b.fin||'',w)}).length,readOn()&&S.books.some(function(b){return b.st==='now'}));
+  P('quote2','Зберегти 2 цитати',2,'цит.',allQuotes().filter(function(x){return inWeek(x.c.date||'',w)}).length,readOn()&&S.books.length>0);
   P('work3','Тренуватися 3 дні',3,'дн.',days(function(d){return S.work.some(function(x){return x.date===d})}),sp);
   P('work5','Тренуватися 5 днів',5,'дн.',days(function(d){return S.work.some(function(x){return x.date===d})}),sp);
   P('reps150','Зробити 150 повторень',150,'повт.',S.work.filter(function(x){return inWeek(x.date,w)}).reduce(function(a,x){return a+repsOf(x)},0),sp);
   P('med3','Медитувати 3 дні',3,'дн.',days(function(d){return S.medlog.some(function(x){return x.date===d})}),hasK('med'));
   P('med30','Помедитувати 30 хвилин',30,'хв',S.medlog.filter(function(x){return inWeek(x.date,w)}).reduce(function(a,x){return a+x.min},0),hasK('med'));
   P('sdk3','Розв’язати 3 судоку',3,'ігри',(S.sd.log||[]).filter(function(d){return inWeek(d,w)}).length,hasK('sudoku'));
-  P('dia4','Писати щоденник 4 дні',4,'дн.',days(function(d){return S.diary.some(function(e){return e.date===d})}),true);
-  P('dia3','Зробити 3 записи в щоденнику',3,'зап.',S.diary.filter(function(e){return inWeek(e.date,w)}).length,true);
-  P('mood5','Відмічати настрій 5 днів',5,'дн.',days(function(d){return S.moods[d]&&S.moods[d].m}),true);
+  P('dia4','Писати щоденник 4 дні',4,'дн.',days(function(d){return S.diary.some(function(e){return e.date===d})}),diaryOn());
+  P('dia3','Зробити 3 записи в щоденнику',3,'зап.',S.diary.filter(function(e){return inWeek(e.date,w)}).length,diaryOn());
+  P('mood5','Відмічати настрій 5 днів',5,'дн.',days(function(d){return S.moods[d]&&S.moods[d].m}),diaryOn());
   var pick=null;if(S.chal.week===w)pick=pool.filter(function(c){return c.id===S.chal.id})[0];
   if(!pick){pick=pool[weekIdx(t)%pool.length];S.chal={week:w,id:pick.id}}
   pick.week=w;pick.done=pick.prog>=pick.tgt;return pick}

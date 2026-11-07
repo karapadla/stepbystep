@@ -121,7 +121,7 @@ case'mbk':S.books.forEach(function(b){if(b.id==f.dataset.id){b.title=v('title')|
 case'mdh':var hh=S.habits.filter(function(x){return x.id==f.dataset.id})[0];
       if(hh){hh.name=v('name')||hh.name;hh.emo=v('emo');hh.fr=v('fr');hh.n=Math.max(1,Math.min(7,num('n')||3));hh.wd=[1,2,3,4,5,6,7].filter(function(i){return f.elements['d'+i].checked});hh.sk=hh.sk||{};if(f.elements['skip'].checked)hh.sk[cur]=1;else delete hh.sk[cur]}
       md=null;break;
-    case'habit':var nh={id:uid(),name:v('name'),emo:v('emo'),kind:kindOf(v('name')),done:{}};if(nh.kind==='sport'){nh.sx=false;nh.th=50;dlg={id:nh.id,th:50,edit:false}}S.habits.push(nh);break;
+    case'habit':var nh={id:uid(),name:v('name'),emo:v('emo'),kind:kindOf(v('name')),done:{},c:iso(new Date())};if(nh.kind==='sport'){nh.sx=false;nh.th=50;dlg={id:nh.id,th:50,edit:false}}S.habits.push(nh);break;
   }
   save();render();
 });

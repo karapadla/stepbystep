@@ -7,16 +7,19 @@ function iso(d){return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0'
 function uid(){return Date.now()*1000+(++_u)}
 function esc(s){return String(s).replace(/[&<>"']/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]})}
 function low(s){return String(s).toLowerCase()}
-function save(){try{S._ts=Date.now();localStorage.setItem(K,JSON.stringify(S))}catch(e){}if(typeof SY!=='undefined'&&SY.on&&SY.ready)sySchedule()}
+var _sf=0;
+function saveFail(){if(Date.now()-_sf<20000)return;_sf=Date.now();flash='Не вдалося зберегти: сховище браузера переповнене. Збережіть копію в ⚙';try{renderToast()}catch(e){}setTimeout(function(){flash='';try{renderToast()}catch(e){}},7000)}
+function save(){try{S._ts=Date.now();localStorage.setItem(K,JSON.stringify(S))}catch(e){saveFail()}if(typeof SY!=='undefined'&&SY.on&&SY.ready)sySchedule()}
 function libBy(n){return S.lib.filter(function(x){return low(x.name)===low(n)})[0]}
 function same(w,x){return low(w.name)===low(x.name)}
 function kindOf(n){return /судок/i.test(n)?'sudoku':/медитац/i.test(n)?'med':/чит/i.test(n)?'read':/спорт|трен|вправ/i.test(n)?'sport':''}
+function hStart(h){var k=Object.keys(h.done||{}).sort()[0]||'',c=(h.id>1e14&&h.id<4e18)?iso(new Date(Math.floor(h.id/1000))):'',a=[k,c].filter(Boolean).sort()[0];return a||iso(new Date())}
 function init(){
   var fresh=false;try{fresh=!localStorage.getItem(K)}catch(e){}
   try{S=JSON.parse(localStorage.getItem(K))}catch(e){}
   S=S||{};S.tasks=S.tasks||[];S.diary=S.diary||[];S.moods=S.moods||{};S.tpl=S.tpl||[];S.set=S.set||{theme:'auto',tabs:{}};S.set.tabs=S.set.tabs||{};S.sd=S.sd||{g:null,w:{}};S.sd.w=S.sd.w||{};S.sd.b=S.sd.b||{};S.sd.n=S.sd.n||{};S.sd.st=S.sd.st||{cur:0,best:0};S.aw=S.aw||{};S.cel=S.cel||{};S.jr=S.jr||[];S.chal=S.chal||{};S.medlog=S.medlog||[];S.work=S.work||[];S.books=S.books||[];S.lib=S.lib||[];S.goals=S.goals||{};S.goals.read=S.goals.read||{d:0};
   S.habits=S.habits||[{id:1,name:'Читання',emo:'📖',kind:'read',done:{}},{id:2,name:'Спорт',emo:'💪',kind:'sport',done:{}}];
-  S.habits.forEach(function(h){if(h.kind===undefined)h.kind=/чит/i.test(h.name)?'read':/спорт|трен|вправ/i.test(h.name)?'sport':'';if(!h.emo)h.emo=h.kind==='read'?'📖':h.kind==='sport'?'💪':'✨';if(h.kind==='sport'&&h.sx===undefined){h.sx=true;h.th=50}h.done=h.done||{};h.fr=h.fr||'d';h.n=h.n||3;h.sk=h.sk||{}});
+  S.habits.forEach(function(h){if(h.kind===undefined)h.kind=/чит/i.test(h.name)?'read':/спорт|трен|вправ/i.test(h.name)?'sport':'';if(!h.emo)h.emo=h.kind==='read'?'📖':h.kind==='sport'?'💪':'✨';if(h.kind==='sport'&&h.sx===undefined){h.sx=true;h.th=50}h.done=h.done||{};h.fr=h.fr||'d';h.n=h.n||3;h.sk=h.sk||{};if(!h.c)h.c=hStart(h)});
   S.lib.forEach(function(x){if(x.gu===undefined){x.gu='reps';x.gd=0;x.gw=0}});
   S.books.forEach(function(b){if(!b.st)b.st='now';b.cm=b.cm||[];b.rate=b.rate||0});
   if(!S.v2){S.work.forEach(function(w){if(!libBy(w.name))S.lib.push({id:uid(),name:w.name,emo:w.emo||'💪',sets:w.sets||0,reps:w.reps||0,kg:w.kg||0,min:w.min||0,gu:'reps',gd:0,gw:0})});S.v2=1;save()}

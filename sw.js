@@ -1,5 +1,5 @@
 /* Step by Step: service worker. Мережа спочатку, кеш як запасний варіант. */
-var C='sbs-v11';
+var C='sbs-v12';
 var F=['./','index.html','manifest.webmanifest','css/style.css','js/core.js','js/habits.js','js/modals.js','js/workouts-books.js','js/diary.js','js/sound-reminders.js','js/sudoku-meditation.js','js/overlays-stats.js','js/icons-awards.js','js/sync-data.js','js/calendar-events.js','js/journeys.js','js/main.js','icon-192.png','icon-512.png','icon-maskable.png','apple-touch-icon.png'];
 self.addEventListener('install',function(e){
   /* кожен файл додається окремо: відсутній файл (напр. іконка) не ламає встановлення */

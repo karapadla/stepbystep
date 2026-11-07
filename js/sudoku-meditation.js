@@ -10,7 +10,7 @@ function sdTf(pz,sl){var dp=shuf([1,2,3,4,5,6,7,8,9]),rows=[],cols=[],tr=Math.ra
   shuf([0,1,2]).forEach(function(b){shuf([0,1,2]).forEach(function(i){cols.push(b*3+i)})});
   for(var r=0;r<9;r++)for(var c=0;c<9;c++){var rr=rows[r],cc=cols[c],i=tr?cc*9+rr:rr*9+cc,a=+pz[i],b=+sl[i];p.push(a?dp[a-1]:0);q.push(dp[b-1])}
   return[p,q]}
-var sdNewRec=false,sdPz=false;
+var sdNewRec=false,sdPz=false,sdSel=-1,sdNote=false;
 function sdProg(g){return !!g&&g.v.some(function(x,i){return x&&!g.p[i]})}
 function sdNew(l){var arr=SDB[l],e=arr[Math.random()*arr.length|0],t=sdTf(e.slice(0,81),e.slice(81)),G=S.sd;
   if(sdProg(G.g)){G.st.cur=0;G.lost=(G.lost||0)+1}
@@ -106,12 +106,14 @@ function medFinish(){var m=S.med,t=todayS();if(!m)return;S.med=null;ambStop();if
   S.medlog.push({date:t,min:Math.round(m.dur/60)});S.habits.forEach(function(h){if(h.kind==='med')h.done[t]=1});save();beep();
   if(ovOpen==='med')ovMsg='med';else{flash='Медитацію завершено';setTimeout(function(){flash='';renderToast()},6000)}
   render();renderOv()}
+function wlRel(){if(wl){try{wl.release()}catch(e){}wl=null}}
+function wlGet(){wlRel();try{navigator.wakeLock&&navigator.wakeLock.request('screen').then(function(l){wl=l}).catch(function(){})}catch(e){}}
 function medAct(a){var m=S.med;
-  if(a==='start'){var iv=document.querySelector('[data-mc]'),mn=Math.max(1,Math.min(180,Number(iv&&iv.value)||medMin));medMin=mn;S.med={dur:mn*60,end:Date.now()+mn*60000,left:mn*60,run:true};sfx('bell');ambStart(S.set.amb);
-    try{navigator.wakeLock&&navigator.wakeLock.request('screen').then(function(l){wl=l}).catch(function(){})}catch(e){}}
-  else if(a==='pause'&&m){m.left=Math.max(1,Math.ceil((m.end-Date.now())/1000));m.run=false;ambStop()}
-  else if(a==='resume'&&m){m.end=Date.now()+m.left*1000;m.run=true;ambStart(S.set.amb)}
-  else if(a==='cancel'){S.med=null;ambStop()}
+  if(a==='start'){var mn=Math.max(1,Math.min(180,medMin||10));medMin=mn;S.med={dur:mn*60,end:Date.now()+mn*60000,left:mn*60,run:true};sfx('bell');ambStart(S.set.amb);
+    wlGet()}
+  else if(a==='pause'&&m){m.left=Math.max(1,Math.ceil((m.end-Date.now())/1000));m.run=false;ambStop();wlRel()}
+  else if(a==='resume'&&m){m.end=Date.now()+m.left*1000;m.run=true;ambStart(S.set.amb);wlGet()}
+  else if(a==='cancel'){S.med=null;ambStop();wlRel()}
   else if(a==='again')ovMsg='';
   save();renderOv()}
 function medBody(){var m=S.med;

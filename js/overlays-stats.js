@@ -1,6 +1,6 @@
 function ovHtml(){
   try{return '<div class="ovh"><b>'+(ovOpen==='sudoku'?ico('grid','ic3')+' Судоку':ico('calm','ic3')+' Медитація')+'</b><button class="ic" data-ov="close" aria-label="Закрити">'+ico('close')+'</button></div>'+(ovOpen==='sudoku'?sdBody():medBody())}
-  catch(e){S.sd.g=null;sdMenu=true;ovMsg='';
+  catch(e){if(ovOpen!=='sudoku')return '<div class="ovc"><button class="ic" data-ov="close">Закрити</button></div>';S.sd.g=null;sdMenu=true;ovMsg='';
     try{return '<div class="ovh"><b>'+ico('grid','ic3')+' Судоку</b><button class="ic" data-ov="close" aria-label="Закрити">'+ico('close')+'</button></div>'+sdBody()}catch(e2){return '<div class="ovc"><button class="ic" data-ov="close">Закрити</button></div>'}}}
 function renderOv(){if(!ovOpen){render();return}document.getElementById('view').innerHTML=ovHtml()}
 var BKDB=('Кобзар|Тарас Шевченко|640;Тіні забутих предків|Михайло Коцюбинський|160;Лісова пісня|Леся Українка|130;Захар Беркут|Іван Франко|220;Кайдашева сім’я|Іван Нечуй-Левицький|160;Місто|Валер’ян Підмогильний|320;Солодка Даруся|Марія Матіос|256;Польові дослідження з українського сексу|Оксана Забужко|256;Музей покинутих секретів|Оксана Забужко|832;Інтернат|Сергій Жадан|352;Ворошиловград|Сергій Жадан|416;Месопотамія|Сергій Жадан|352;Танґо смерті|Юрій Винничук|432;Московіада|Юрій Андрухович|192;Рекреації|Юрій Андрухович|176;Фелікс Австрія|Софія Андрухович|288;Століття Якова|Володимир Лис|352;Чорний ворон|Василь Шкляр|384;Тигролови|Іван Багряний|344;'+

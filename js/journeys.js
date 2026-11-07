@@ -135,7 +135,7 @@ function jBuild(){var b=jb,ed=!!b.edit,fin=b.mode!=='sam',h='';
   h+='<div class="jfoot">'+sbtn('data-ja="save"'+(jValid()?'':' disabled'),ed?'check':'play',ed?'Зберегти':'Почати шлях','ok jgo')+(jValid()?'':'<span class="sm">Оберіть хоча б одну звичку</span>')+'</div>';
   return '<div class="jbld">'+h+'</div>'}
 function jAddH(){var n=(jb.nh||'').trim();if(!n)return;var h=S.habits.filter(function(x){return low(x.name)===low(n)&&!x.ar})[0];
-  if(!h){h={id:uid(),name:n,emo:'star',kind:kindOf(n),done:{},fr:'d',n:3,sk:{}};if(h.kind==='sport'){h.sx=false;h.th=50}S.habits.push(h);save()}
+  if(!h){h={id:uid(),name:n,emo:'star',kind:kindOf(n),done:{},fr:'d',n:3,sk:{},c:todayS()};if(h.kind==='sport'){h.sx=false;h.th=50}S.habits.push(h);save()}
   var tg=jb.mode==='mix'?jb.gr[0].hs:jb.hs;if(tg.indexOf(h.id)<0){if(jb.mode==='ind'&&jb.edit)jb.hs=[h.id];else tg.push(h.id)}jb.nh=''}
 function jSave(){var b=jb,t=todayS(),nm=(b.name||'').trim(),mk=function(m,n,R){return{id:uid(),vs:b.vs||'c',mode:m,name:n,a:t,st:'on',gp:[],cp:{},R:R}},grs=function(){return b.gr.filter(function(g){return g.hs.length}).map(function(g){return{n:g.n.trim(),hs:g.hs.slice(),rule:g.rule,steps:g.steps}})};
   if(!jValid())return;
