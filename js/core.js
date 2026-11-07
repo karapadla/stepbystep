@@ -35,7 +35,7 @@ function render(){
   document.getElementById('plan').setAttribute('aria-expanded',planOpen);
   document.getElementById('today').style.display=cur===todayS()?'none':'';
   document.getElementById('pg').textContent=Math.round(dayPct(cur)*100)+'% звичок';
-  var ST=tab==='stats';document.querySelector('.date').style.display=tab==='stats'?'':'none';document.getElementById('planbox').innerHTML=ST?vPlan():'';document.getElementById('plan').style.display=document.getElementById('cal').style.display=ST?'':'none';
+  var ST=tab==='stats';document.querySelector('.date').style.display='none';document.getElementById('planbox').innerHTML='';if(ST){try{checkAwards()}catch(e){}}
   document.getElementById('tabs').innerHTML=visTabs().map(function(k){return '<button data-tab="'+k+'" class="'+(k===tab?'on':'')+'">'+IC[k]+'<span>'+TABS[k]+'</span></button>'}).join('');
   document.getElementById('bd').className='bd'+(ovOpen?' inov':'');
   document.getElementById('view').innerHTML=ovOpen?ovHtml():ptitle(tab)+hint()+({ways:vWays,habits:vHabits,work:vWork,read:vRead,diary:vDiary,stats:vStats})[tab]();
@@ -45,9 +45,9 @@ function render(){
   renderDlg();
   try{if(jCheck())return render()}catch(e){}try{checkAwards()}catch(e){}try{animRoutes()}catch(e){}
 }
-function vPlan(){
-  var l=S.tasks.filter(function(t){return t.date===cur}).sort(function(a,b){return (a.time||'99').localeCompare(b.time||'99')});
+function vPlan(){var l=S.tasks.filter(function(t){return t.date===cur}).sort(function(a,b){return (a.time||'99').localeCompare(b.time||'99')});
   if(!l.length&&!planOpen)return '';
-  return '<div class="plan"><h3>Плани на день</h3>'+(planOpen?'<form data-f="task"><input type="time" name="time" aria-label="Час"><input type="text" name="text" placeholder="Що заплановано?" required><button class="add" aria-label="Додати" title="Додати">'+ico('plus')+'</button></form>':'')+
-  l.map(function(t){return '<div class="row'+(t.done?' done':'')+'"><input type="checkbox" data-do="task" data-id="'+t.id+'"'+(t.done?' checked':'')+'><span class="tm">'+(t.time||'—')+'</span><span class="t">'+esc(t.text)+'</span><button class="x" data-del="tasks" data-id="'+t.id+'" aria-label="Видалити">×</button></div>'}).join('')+(l.some(function(t){return t.time&&!t.done})?'<div class="jact"><button class="sab" data-dx="ics" title="У календар (з будильником)">'+ico('clock')+'<span>У календар</span></button></div>':'')+'</div>';
-}
+  var n=l.filter(function(t){return t.done}).length;
+  return '<div class="pln"><div class="plh"><span>Плани</span>'+(l.length?'<small>'+n+' з '+l.length+'</small>':'')+(l.some(function(t){return t.time&&!t.done})?'<button class="plc" data-dx="ics" title="У календар (з будильником)" aria-label="У календар">'+ico('clock')+'</button>':'')+'</div>'+
+  (planOpen?'<form class="plf" data-f="task"><input type="time" name="time" aria-label="Час"><input type="text" name="text" placeholder="Що заплановано?" required><button class="plb" aria-label="Додати" title="Додати">'+ico('plus')+'</button></form>':'')+
+  l.map(function(t){return '<label class="pl'+(t.done?' done':'')+'"><input type="checkbox" data-do="task" data-id="'+t.id+'"'+(t.done?' checked':'')+'>'+(t.time?'<span class="tm">'+t.time+'</span>':'')+'<span class="t">'+esc(t.text)+'</span><button class="x" data-del="tasks" data-id="'+t.id+'" aria-label="Видалити">×</button></label>'}).join('')+'</div>'}
