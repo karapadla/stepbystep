@@ -37,7 +37,7 @@ document.addEventListener('click',function(e){
   if(D.icyc){t.form.classList.toggle('icopen');return}
   if(D.icpick){var f2=t.form,ph=f2.elements['emo'];ph.value=D.icpick;var ib=f2.querySelector('[data-icyc]');if(ib)ib.innerHTML=ico(D.icpick);f2.classList.remove('icopen');return}
   if(D.awt){S.set.aw=!S.set.aw;save();return render()}
-  if(D.sper){var q2=D.sper.split('|');ovP=q2[0];ovO=Math.min(0,+q2[1]);return render()}if(D.snav){ovO=Math.min(0,ovO+ +D.snav);return render()}if(D.stod){cur=todayS();cm=cur.slice(0,7);return render()}if(D.saw){ovAll=!ovAll;return render()}
+  if(D.sper){var q2=D.sper.split('|');ovP=q2[0];ovO=Math.min(0,+q2[1]);return render()}if(D.snav){ovO=Math.min(0,ovO+ +D.snav);return render()}if(D.saw){ovAll=!ovAll;return render()}
   if(D.dx){dataAct(D.dx);return}
   if(D.syx){syChoose(D.syx);return}
   if(D.impx){importApply();return}
