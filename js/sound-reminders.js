@@ -1,4 +1,4 @@
-var AC=null,remN=0;
+var AC=null;
 function sndOn(){return S.set.snd!==false}
 function actx(){try{var C=window.AudioContext||window.webkitAudioContext;if(!C)return null;if(!AC)AC=new C();if(AC.state==='suspended')AC.resume();return AC}catch(e){return null}}
 function tone(f,t0,d,v,ty){try{var a=actx();if(!a)return;var o=a.createOscillator(),g=a.createGain(),t=a.currentTime+t0;o.type=ty||'sine';o.frequency.value=f;o.connect(g);g.connect(a.destination);g.gain.setValueAtTime(.0001,t);g.gain.exponentialRampToValueAtTime(v,t+.012);g.gain.exponentialRampToValueAtTime(.0001,t+d);o.start(t);o.stop(t+d+.05)}catch(e){}}
@@ -8,8 +8,7 @@ function sfx(k){if(!sndOn())return;
   else if(k==='cd')tone(660,0,.14,.16);
   else if(k==='rest'){tone(1047,0,.16,.2);tone(1047,.24,.16,.2);tone(1319,.48,.4,.2)}
   else if(k==='bell')bowl(256,.1)
-  else if(k==='win')[523,659,784,1047].forEach(function(f,i){tone(f,i*.13,.6,.1)});
-  else if(k==='alarm')[0,.6,1.2,1.8].forEach(function(t){tone(880,t,.22,.16);tone(660,t+.24,.22,.16)})}
+  else if(k==='win')[523,659,784,1047].forEach(function(f,i){tone(f,i*.13,.6,.1)});}
 var AMB=null;
 function ambStop(){var x=AMB;AMB=null;if(!x)return;try{var a=AC,t=a.currentTime;x.g.gain.cancelScheduledValues(t);x.g.gain.setValueAtTime(Math.max(.0001,x.g.gain.value),t);x.g.gain.exponentialRampToValueAtTime(.0001,t+.6);setTimeout(function(){try{x.src.stop();x.lfo&&x.lfo.stop()}catch(e){}},700)}catch(e){}}
 var REV=null,AMBC={};
@@ -35,17 +34,5 @@ function ambStart(k){ambStop();if(k==='brown')k='wind';if(!k||!sndOn())return;va
   else{f1.type='bandpass';f1.frequency.value=520;f1.Q.value=.7;f2.type='lowpass';f2.frequency.value=3000;lfo=a.createOscillator();var lg=a.createGain();lfo.frequency.value=.06;lg.gain.value=260;lfo.connect(lg);lg.connect(f1.frequency);lfo.start()}
   src.connect(f1);f1.connect(f2);f2.connect(g);g.connect(a.destination);g.gain.setValueAtTime(.0001,a.currentTime);g.gain.exponentialRampToValueAtTime(vol,a.currentTime+2.5);src.start();AMB={src:src,g:g,lfo:lfo}}catch(e){AMB=null}}
 function beep(){sfx('bell');setTimeout(function(){sfx('bell')},3300);try{navigator.vibrate&&navigator.vibrate([200,100,200])}catch(e){}}
-function remAsk(){try{if(window.Notification&&Notification.permission==='default')Notification.requestPermission()}catch(e){}sfx('tick')}
-function notify(msg){try{if(!window.Notification||Notification.permission!=='granted')return;if(navigator.serviceWorker&&navigator.serviceWorker.ready)navigator.serviceWorker.ready.then(function(r){r.showNotification('Step by Step',{body:msg,icon:'icon-192.png',tag:'sbs'})}).catch(function(){new Notification('Step by Step',{body:msg})});else new Notification('Step by Step',{body:msg})}catch(e){}}
-function remTick(){if(S.set.rem!==true||++remN%15)return;var d=new Date(),t=todayS(),m=d.getHours()*60+d.getMinutes(),ch=false;
-  S.tasks.forEach(function(x){if(x.date!==t||x.done||!x.time||x.rem)return;var p=x.time.split(':'),tm=(+p[0])*60+(+p[1]);if(tm>m)return;x.rem=1;ch=true;if(m-tm>30)return;sfx('alarm');var msg='\u23f0 '+x.time+' \u00b7 '+x.text;flash=msg;renderToast();setTimeout(function(){flash='';renderToast()},9000);notify(msg)});
-  if(ch)save()}
-function saveFile(name,txt,mime){if(DL){DL.save({filename:name,data:txt}).then(function(){say('\u0424\u0430\u0439\u043b \u0437\u0431\u0435\u0440\u0435\u0436\u0435\u043d\u043e')}).catch(function(e){if(!e||e.code!=='declined')say('\u041d\u0435 \u0432\u0434\u0430\u043b\u043e\u0441\u044f \u0437\u0431\u0435\u0440\u0435\u0433\u0442\u0438 \u0444\u0430\u0439\u043b')});return}
-  try{var u=URL.createObjectURL(new Blob([txt],{type:mime})),a=document.createElement('a');a.href=u;a.download=name;document.body.appendChild(a);a.click();a.remove();setTimeout(function(){URL.revokeObjectURL(u)},4000);say('\u0424\u0430\u0439\u043b \u0437\u0431\u0435\u0440\u0435\u0436\u0435\u043d\u043e')}catch(e){say('\u041d\u0435 \u0432\u0434\u0430\u043b\u043e\u0441\u044f \u0437\u0431\u0435\u0440\u0435\u0433\u0442\u0438 \u0444\u0430\u0439\u043b')}}
-function icsEsc(x){return String(x).replace(/\\/g,'\\\\').replace(/[,;]/g,'\\$&').replace(/\n/g,'\\n')}
-function exportIcs(){var l=S.tasks.filter(function(t){return t.date===cur&&t.time&&!t.done});if(!l.length)return say('\u041d\u0435\u043c\u0430\u0454 \u043f\u043b\u0430\u043d\u0456\u0432 \u0456\u0437 \u0447\u0430\u0441\u043e\u043c');
-  var z=function(n){return ('0'+n).slice(-2)},st=new Date().toISOString().replace(/[-:]|\.\d+/g,''),r=['BEGIN:VCALENDAR','VERSION:2.0','PRODID:-//Step by Step//UK','CALSCALE:GREGORIAN'];
-  l.forEach(function(t){var e=new Date(t.date+'T'+t.time+':00');e.setMinutes(e.getMinutes()+30);r.push('BEGIN:VEVENT','UID:'+t.id+'@step-by-step','DTSTAMP:'+st,'DTSTART:'+t.date.replace(/-/g,'')+'T'+t.time.replace(':','')+'00','DTEND:'+e.getFullYear()+z(e.getMonth()+1)+z(e.getDate())+'T'+z(e.getHours())+z(e.getMinutes())+'00','SUMMARY:'+icsEsc(t.text),'BEGIN:VALARM','ACTION:DISPLAY','DESCRIPTION:'+icsEsc(t.text),'TRIGGER:-PT0M','END:VALARM','END:VEVENT')});
-  r.push('END:VCALENDAR');saveFile('plans-'+cur+'.ics',r.join('\r\n'),'text/calendar')}
 document.addEventListener('pointerdown',function(){actx()},{once:true,passive:true});
 /* Судоку */

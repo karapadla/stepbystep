@@ -1,4 +1,4 @@
-var K='tracker-v1',tab='ways',jb=null,jOpen=null,jX=null,jv='all',jsec=-1,jc={},LRF={},cur=iso(new Date()),cm=cur.slice(0,7),mm=cm,mview='m',calOpen=false,planOpen=false,openEx=null,openBk=null,newEx=false,newBk=false,bsub='now',dDraft='',ASSETS=null,AT=false,dPend=[],dErr='',dBusy=false,ovOpen=null,ovMsg='',sdMenu=false,sdLast=0,sdDig=0,medMin=10,wl=null,flash='',dlg=null,md=null,wkT=0,wkDone={},rest=null,dq='',dtag='',dSearch=false,qq='',wsum='',wsumWk='',wsumBusy=false,bkQ='',bkRes=[],bkCl=[],bkClQ='',bkBusy=false,bkErr='',SMP=null,undo=null,undoT,_u=0,S;
+var K='tracker-v1',tab='ways',jb=null,jOpen=null,jX=null,jv='all',jsec=-1,jc={},LRF={},cur=iso(new Date()),cm=cur.slice(0,7),mm=cm,mview='m',calOpen=false,openEx=null,openBk=null,newEx=false,newBk=false,bsub='now',dDraft='',ASSETS=null,AT=false,dPend=[],dErr='',dBusy=false,ovOpen=null,ovMsg='',sdMenu=false,sdLast=0,sdDig=0,medMin=10,wl=null,flash='',dlg=null,md=null,wkT=0,wkDone={},rest=null,dq='',dtag='',dSearch=false,qq='',wsum='',wsumWk='',wsumBusy=false,bkQ='',bkRes=[],bkCl=[],bkClQ='',bkBusy=false,bkErr='',SMP=null,undo=null,undoT,_u=0,S;
 var TABS={ways:'Шляхи',habits:'Звички',work:'Вправи',read:'Читання',diary:'Щоденник',stats:'Огляд'};
 
 var PAL=['#f06a4f','#e0a030','#2ea05a','#1f8fd0','#7b5cf0','#d9559b'],TC={habits:'#2a9457',work:'#e0563a',read:'#6c4be0',diary:'#c93d86',stats:'#1f8fd0'};
@@ -32,10 +32,9 @@ function readImg(file,cb){var r=new FileReader();r.onload=function(){var im=new 
 function render(){
   jc={};if(visTabs().indexOf(tab)<0)tab=visTabs()[0];
   document.getElementById('dl').textContent=new Date(cur+'T12:00').toLocaleDateString('uk-UA',{weekday:'short',day:'numeric',month:'long'});
-  document.getElementById('plan').setAttribute('aria-expanded',planOpen);
   document.getElementById('today').style.display=cur===todayS()?'none':'';
   document.getElementById('pg').textContent=Math.round(dayPct(cur)*100)+'% звичок';
-  var ST=tab==='stats';document.querySelector('.date').style.display='none';document.getElementById('planbox').innerHTML='';if(ST){try{checkAwards()}catch(e){}}
+  var ST=tab==='stats';document.querySelector('.date').style.display='none';if(ST){try{checkAwards()}catch(e){}}
   document.getElementById('tabs').innerHTML=visTabs().map(function(k){return '<button data-tab="'+k+'" class="'+(k===tab?'on':'')+'">'+IC[k]+'<span>'+TABS[k]+'</span></button>'}).join('');
   document.getElementById('bd').className='bd'+(ovOpen?' inov':'');
   document.getElementById('view').innerHTML=ovOpen?ovHtml():ptitle(tab)+hint()+({ways:vWays,habits:vHabits,work:vWork,read:vRead,diary:vDiary,stats:vStats})[tab]();
@@ -45,9 +44,3 @@ function render(){
   renderDlg();
   try{if(jCheck())return render()}catch(e){}try{checkAwards()}catch(e){}try{animRoutes()}catch(e){}
 }
-function vPlan(){var l=S.tasks.filter(function(t){return t.date===cur}).sort(function(a,b){return (a.time||'99').localeCompare(b.time||'99')});
-  if(!l.length&&!planOpen)return '';
-  var n=l.filter(function(t){return t.done}).length;
-  return '<div class="pln"><div class="plh"><span>Плани</span>'+(l.length?'<small>'+n+' з '+l.length+'</small>':'')+(l.some(function(t){return t.time&&!t.done})?'<button class="plc" data-dx="ics" title="У календар (з будильником)" aria-label="У календар">'+ico('clock')+'</button>':'')+'</div>'+
-  (planOpen?'<form class="plf" data-f="task"><input type="time" name="time" aria-label="Час"><input type="text" name="text" placeholder="Що заплановано?" required><button class="plb" aria-label="Додати" title="Додати">'+ico('plus')+'</button></form>':'')+
-  l.map(function(t){return '<label class="pl'+(t.done?' done':'')+'"><input type="checkbox" data-do="task" data-id="'+t.id+'"'+(t.done?' checked':'')+'>'+(t.time?'<span class="tm">'+t.time+'</span>':'')+'<span class="t">'+esc(t.text)+'</span><button class="x" data-del="tasks" data-id="'+t.id+'" aria-label="Видалити">×</button></label>'}).join('')+'</div>'}

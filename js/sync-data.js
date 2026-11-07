@@ -63,7 +63,7 @@ function importFile(t){var f=t.files&&t.files[0];t.value='';if(!f)return;if(f.si
 function importApply(){var d=SY.imp;if(!d)return;var prev=JSON.stringify(S);d=JSON.parse(JSON.stringify(d));delete d._rts;
   try{localStorage.setItem(K,JSON.stringify(d))}catch(e){}init();applyTheme();SY.imp=null;md=null;
   undo={full:prev,msg:'Дані відновлено з файлу'};clearTimeout(undoT);undoT=setTimeout(function(){undo=null;renderToast()},10000);save();render()}
-function dataAct(a){if(a==='export')exportData();else if(a==='ics')exportIcs();else if(a==='syncnow'){SY.ready=true;SY.fail=0;syStart()}}
+function dataAct(a){if(a==='export')exportData();else if(a==='syncnow'){SY.ready=true;SY.fail=0;syStart()}}
 function dataSection(){var av=!!(SY.db&&SY.uid),st=syStatus(),cls=!SY.on?'off':SY.status==='err'?'err':(st==='Синхронізація…'?'busy':'ok');
   var I=function(d){return '<svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="'+d+'"/></svg>'};
   return '<div class="lbl">Дані</div><div class="jact"><button class="sab" data-dx="export">'+I('M12 4v10M8 10l4 4 4-4M5 19h14')+'<span>Зберегти</span></button><label class="sab">'+I('M12 15V5M8 9l4-4 4 4M5 19h14')+'<span>Відновити</span><input class="vh" type="file" accept=".json,application/json" data-dimp="1"></label></div>'+
