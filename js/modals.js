@@ -5,6 +5,8 @@ function mdSet(){var st=S.set,th=st.theme||'auto',T=jcpTotal();
   return '<h3>Налаштування</h3><div class="seg">'+[['auto','Авто'],['light','Світла'],['dark','Темна']].map(function(x){return '<button data-theme2="'+x[0]+'" class="'+(th===x[0]?'on':'')+'">'+x[1]+'</button>'}).join('')+'</div><div class="lbl">Розділи</div>'+
   [['ways','Шляхи'],['read','Читання'],['diary','Щоденник'],['stats','Огляд']].map(function(x){return tg('data-stab',x[0],st.tabs[x[0]]!==false,x[1])}).join('')+
   '<div class="lbl">Загальне</div>'+tg('data-sset','hints',st.hints===true,'Підказки')+tg('data-sset','snd',st.snd!==false,'Звуки')+
+  '<div class="lbl">Ключ Google Books (необов’язково)</div><input type="text" data-gbk="1" value="'+esc(st.gbk||'')+'" placeholder="AIza…" autocomplete="off" style="width:100%">'+
+  
   
   dataSection()+'<div class="jact">'+sbtn('data-mdx="close"','check','Готово','ok')+'</div>'}
 function mdHtml(){if(!md)return '';if(md.t==='set')return mdSet();if(md.t==='bk')return mdBk();if(md.t==='syncq')return mdSyncQ();if(md.t==='impq')return mdImpQ();if(md.t==='fin')return jFin();if(md.t==='cfin'){var jj=jGet(md.id);return jj?'<h3>Завершити шлях?</h3><p class="sm">«'+esc(jj.name)+'»: прогрес збережеться, але нові кроки більше не додаватимуться.</p><div class="jact">'+sbtn('data-ja="fin2|'+jj.id+'"','flag','Завершити','ok')+sbtn('type="button" data-mdx="close"','close','Скасувати')+'</div>':''}var h=S.habits.filter(function(x){return x.id==md.id})[0];return h?mdHabit(h):''}

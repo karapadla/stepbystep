@@ -93,6 +93,7 @@ document.addEventListener('change',function(e){
   if(D.sysync!==undefined){sySwitch(t.checked);return}
   if(D.dadd){Array.prototype.forEach.call(t.files,function(f){dPend.push(f)});t.value='';render();return}
   if(D.mc){medSl(t);return}
+  if(D.gbk!==undefined){S.set.gbk=t.value.trim();save();return}
   if(D.cnt){S.lib.forEach(function(x){if(x.id==D.cnt)x.cnt=t.checked});save();render();return}
   if(D.xp){S.lib.forEach(function(x){if(x.id==D.xp)x.gp=t.value});save();render();return}
   if(D.xu){S.lib.forEach(function(x){if(x.id==D.xu)x.gu=t.value});save();render();return}
