@@ -22,7 +22,7 @@ function sdErrG(g){var e=sdErr(g.v);if(g.s)for(var i=0;i<81;i++)if(g.v[i]&&g.v[i
 function sdSolved(g){return g.s?g.v.every(function(x,i){return x===g.s[i]}):(g.v.indexOf(0)<0&&!sdErr(g.v).some(Boolean))}
 function sdInfo(i,e){var g=S.sd.g,r=i/9|0,c=i%9,cl='sc'+(g.p[i]?' g':'')+(c%3===2&&c<8?' c2':'')+(r%3===2&&r<8?' r2':'');
   if(sdSel>=0){var sr=sdSel/9|0,sc=sdSel%9;if(i===sdSel)cl+=' sl';else if(sr===r||sc===c||((sr/3|0)===(r/3|0)&&(sc/3|0)===(c/3|0)))cl+=' hl'}
-  if(sdDig&&g.v[i]===sdDig)cl+=' sm';
+  if(sdDig&&g.v[i]===sdDig)cl+=' same';
   if(e[i])cl+=' er';
   var inner=g.v[i]||'';if(!g.v[i]&&g.n[i]){inner='<span class="nt">';for(var k=1;k<=9;k++)inner+='<i>'+((g.n[i]>>k)&1?k:'')+'</i>';inner+='</span>'}
   return[cl,String(inner)]}
